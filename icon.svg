@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+    <defs>
+        <radialGradient id="starCore" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#fffff0"/>
+            <stop offset="0.3" stop-color="#fff096"/>
+            <stop offset="0.7" stop-color="#ffc83c" stop-opacity="0.95"/>
+            <stop offset="1" stop-color="#ffa014" stop-opacity="0.8"/>
+        </radialGradient>
+        <radialGradient id="starGlow" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#ffdc50" stop-opacity="0.9"/>
+            <stop offset="0.15" stop-color="#ffb428" stop-opacity="0.6"/>
+            <stop offset="0.4" stop-color="#ff7814" stop-opacity="0.2"/>
+            <stop offset="0.7" stop-color="#ff500a" stop-opacity="0.05"/>
+            <stop offset="1" stop-color="#ff3200" stop-opacity="0"/>
+        </radialGradient>
+    </defs>
+
+    <!-- Black space background with subtle gradient -->
+    <rect width="256" height="256" fill="#000"/>
+    <circle cx="128" cy="128" r="128" fill="url(#bg)" opacity="0.3"/>
+
+    <!-- Faint orbital trail (suggesting motion) -->
+    <g opacity="0.25" fill="none" stroke-linecap="round">
+        <path d="M 128 62 A 82 82 0 0 0 71 174" stroke="#ff9030" stroke-width="3" stroke-dasharray="2 5"/>
+        <path d="M 71 174 A 82 82 0 0 0 185 174" stroke="#ff9030" stroke-width="3" stroke-dasharray="2 5"/>
+        <path d="M 185 174 A 82 82 0 0 0 128 62" stroke="#ff9030" stroke-width="3" stroke-dasharray="2 5"/>
+    </g>
+
+    <!-- Three suns arranged in triangle -->
+    <!-- Top -->
+    <circle cx="128" cy="62" r="52" fill="url(#starGlow)"/>
+    <circle cx="128" cy="62" r="22" fill="url(#starCore)"/>
+
+    <!-- Bottom-left -->
+    <circle cx="71" cy="174" r="52" fill="url(#starGlow)"/>
+    <circle cx="71" cy="174" r="22" fill="url(#starCore)"/>
+
+    <!-- Bottom-right -->
+    <circle cx="185" cy="174" r="52" fill="url(#starGlow)"/>
+    <circle cx="185" cy="174" r="22" fill="url(#starCore)"/>
+</svg>
