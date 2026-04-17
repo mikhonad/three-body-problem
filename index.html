@@ -13,22 +13,38 @@
         html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Segoe UI', Arial, sans-serif; }
         canvas { display: block; width: 100%; height: 100%; touch-action: none; -webkit-user-select: none; user-select: none; }
         #btns {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 18px; z-index: 10;
+            position: fixed; bottom: 56px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 48px; z-index: 10;
             opacity: 1; transition: opacity 0.6s ease;
         }
         #btns.hidden { opacity: 0; pointer-events: none; }
         #btns button {
-            width: 56px; height: 56px; border: none; border-radius: 50%;
-            background: rgba(255,200,100,.15); color: rgba(255,200,100,.75);
-            font-size: 20px; cursor: pointer; touch-action: manipulation;
+            width: 150px; height: 150px; border: none; border-radius: 50%;
+            background: rgba(255,200,100,.18); color: rgba(255,200,100,.9);
+            font-size: 64px; cursor: pointer; touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
             display: flex; align-items: center; justify-content: center;
         }
         #btns button:active { background: rgba(255,200,100,.4); }
+        @media (max-width: 1600px) {
+            #btns { gap: 26px; bottom: 36px; }
+            #btns button { width: 94px; height: 94px; font-size: 38px; }
+        }
+        @media (max-width: 1024px) {
+            #btns { gap: 16px; bottom: 26px; }
+            #btns button { width: 64px; height: 64px; font-size: 28px; }
+        }
         @media (max-width: 768px) {
-            #btns { gap: 28px; bottom: 28px; }
-            #btns button { width: 88px; height: 88px; font-size: 30px; }
+            #btns { gap: 10px; bottom: 22px; }
+            #btns button { width: 58px; height: 58px; font-size: 24px; }
+        }
+        @media (max-width: 480px) {
+            #btns { gap: 6px; bottom: 18px; }
+            #btns button { width: 50px; height: 50px; font-size: 20px; }
+        }
+        @media (max-width: 380px) {
+            #btns { gap: 4px; bottom: 14px; }
+            #btns button { width: 44px; height: 44px; font-size: 18px; }
         }
 
         /* Menu overlay */
@@ -40,31 +56,36 @@
         }
         #menu.hidden { display: none; }
         #menu h1 {
-            font-size: clamp(24px, 5vw, 42px); font-weight: 300;
-            letter-spacing: 3px; margin-bottom: 40px; text-align: center;
+            font-size: clamp(32px, 5vw, 80px); font-weight: 300;
+            letter-spacing: 4px; margin-bottom: 50px; text-align: center;
             color: rgba(255,220,100,.9);
-            text-shadow: 0 0 20px rgba(255,150,50,.6);
+            text-shadow: 0 0 30px rgba(255,150,50,.6);
         }
         #menu .row {
-            display: flex; align-items: center; gap: 16px;
-            margin: 14px 0; font-size: clamp(16px, 2.5vw, 22px);
+            display: flex; align-items: center; gap: 24px;
+            margin: 20px 0; font-size: clamp(18px, 1.8vw, 32px);
         }
-        #menu label { min-width: 90px; text-align: right; color: rgba(255,200,100,.8); }
+        #menu label { min-width: 140px; text-align: right; color: rgba(255,200,100,.8); }
         #menu input[type=number] {
-            width: 70px; padding: 10px; font-size: inherit;
+            width: 100px; padding: 12px; font-size: inherit;
             background: rgba(255,200,100,.1); color: #fff;
             border: 1px solid rgba(255,200,100,.3); border-radius: 8px;
             text-align: center;
         }
         #menu input[type=range] {
-            width: 180px; accent-color: #ffaa40;
+            width: clamp(220px, 26vw, 420px); height: 10px; accent-color: #ffaa40;
         }
-        #menu .val { min-width: 40px; color: #fff; }
+        #menu .val {
+            min-width: 70px; color: #fff; font-size: 1.1em;
+            -moz-appearance: textfield;
+        }
+        #menu .val::-webkit-outer-spin-button,
+        #menu .val::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         #menu .startBtn {
-            margin-top: 30px; padding: 16px 60px;
-            font-size: clamp(18px, 3vw, 24px); letter-spacing: 4px;
+            margin-top: 46px; padding: 22px 80px;
+            font-size: clamp(22px, 2.4vw, 40px); letter-spacing: 5px;
             background: rgba(255,180,60,.2); color: #ffeab0;
-            border: 1px solid rgba(255,200,100,.5); border-radius: 50px;
+            border: 1px solid rgba(255,200,100,.5); border-radius: 60px;
             cursor: pointer; touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
@@ -72,9 +93,66 @@
             background: rgba(255,200,100,.35); color: #fff;
         }
         #menu .sig {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            font-size: 12px; letter-spacing: 2px;
+            position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+            font-size: clamp(12px, 1vw, 18px); letter-spacing: 2px;
             color: rgba(255,200,100,.4); font-weight: 300;
+        }
+
+        /* Mobile: shrink menu by ~1.5x so it fits narrow screens */
+        @media (max-width: 640px) {
+            #menu h1 {
+                font-size: clamp(22px, 5.5vw, 36px);
+                letter-spacing: 2px; margin-bottom: 32px;
+            }
+            #menu .row {
+                gap: 12px; margin: 12px 0; font-size: 14px;
+            }
+            #menu label { min-width: 60px; }
+            #menu input[type=number] { width: 60px; padding: 7px; }
+            #menu input[type=range] {
+                width: clamp(130px, 40vw, 200px); height: 8px;
+            }
+            #menu .val { min-width: 30px; font-size: 1em; }
+            #menu .startBtn {
+                margin-top: 28px; padding: 12px 40px;
+                font-size: 16px; letter-spacing: 3px;
+                border-radius: 40px;
+            }
+            #menu .sig {
+                font-size: 10px; bottom: 16px; letter-spacing: 1px;
+            }
+        }
+
+        /* Desktop: 3x larger menu */
+        @media (min-width: 1024px) {
+            #menu h1 {
+                font-size: clamp(80px, 9vw, 180px);
+                letter-spacing: 10px; margin-bottom: 120px;
+                text-shadow: 0 0 50px rgba(255,150,50,.7);
+            }
+            #menu .row {
+                gap: 50px; margin: 34px 0;
+                font-size: clamp(48px, 3.6vw, 72px);
+            }
+            #menu label { min-width: 300px; }
+            #menu input[type=number] {
+                width: 200px; padding: 22px;
+                border-radius: 14px; border-width: 2px;
+            }
+            #menu input[type=range] {
+                width: clamp(500px, 45vw, 900px); height: 22px;
+            }
+            #menu .val { min-width: 140px; }
+            #menu .startBtn {
+                margin-top: 90px; padding: 44px 170px;
+                font-size: clamp(56px, 4.8vw, 96px);
+                letter-spacing: 12px; border-radius: 120px;
+                border-width: 2px;
+            }
+            #menu .sig {
+                font-size: clamp(24px, 1.8vw, 40px);
+                bottom: 44px; letter-spacing: 4px;
+            }
         }
     </style>
 </head>
@@ -85,13 +163,13 @@
     <h1>THE THREE-BODY PROBLEM</h1>
     <div class="row">
         <label for="sStars">Stars</label>
-        <input type="range" id="sStars" min="1" max="30" value="3">
-        <span class="val" id="vStars">3</span>
+        <input type="range" id="sStars" min="1" max="500" value="3">
+        <input type="number" id="vStars" min="1" max="500" value="3" class="val">
     </div>
     <div class="row">
         <label for="sPlanets">Planets</label>
-        <input type="range" id="sPlanets" min="0" max="50" value="1">
-        <span class="val" id="vPlanets">1</span>
+        <input type="range" id="sPlanets" min="0" max="2000" value="1">
+        <input type="number" id="vPlanets" min="0" max="2000" value="1" class="val">
     </div>
     <button class="startBtn" onclick="startSim()">START</button>
     <div class="sig">Created by Mikhail Nikitin</div>
@@ -102,12 +180,13 @@
     <button onclick="ctl('pause')" title="Pause">&#10074;&#10074;</button>
     <button onclick="ctl('faster')" title="Faster">&#9654;</button>
     <button onclick="ctl('restart')" title="Restart">&#8635;</button>
+    <button onclick="ctl('fullscreen')" title="Fullscreen">&#9974;</button>
     <button onclick="ctl('menu')" title="Menu">&#9776;</button>
 </div>
 <script>
 (() => {
     const C = document.getElementById('c'), X = C.getContext('2d');
-    const G = 2000000, SSQ = 900, BR = 14, SUBS = 4, TLEN = 50;
+    const G = 2000000, SSQ = 900, BR = 14, STAR_MULT = 2, SUBS = 4, TLEN = 50;
     const FPS = 30, FRAME_MS = 1000 / FPS;
 
     let bodies, lastT = 0, tScale = 2, restartT = null, lastFrame = 0;
@@ -231,6 +310,7 @@
     let smoothTargetX = 0, smoothTargetY = 0, smoothTargetZoom = 1;
     let smoothMaxDist = 0;
     let smoothInited = false;
+    let cameraZoomFloor = null; // ratchet: zoom can only tighten from initial, never widen
 
     function updateAutoCamera(dt) {
         const allStars = [], allPlanets = [];
@@ -241,24 +321,26 @@
         const allAlive = allStars.length ? allStars : allPlanets;
         if (!allAlive.length) return;
 
-        // Clean up committed focus: remove dead bodies
+        // Committed focus contains ONLY STARS — planets don't drive camera target
+        // (planets orbit rapidly, would cause target jitter)
+        const focusPool = allStars.length ? allStars : allPlanets;
+
+        // Clean up: remove dead bodies
         if (committedFocus) committedFocus = committedFocus.filter(b => b.alive);
 
-        let stars, planets, alive, focus;
+        let focus;
 
-        // Initial selection (or re-select if all committed bodies died/gone)
         if (!committedFocus || committedFocus.length === 0) {
-            // Use current algorithm to pick initial set
-            if (allStars.length <= 5) {
-                focus = allStars.length ? allStars.slice() : allPlanets.slice();
+            // Initial pick from stars only
+            if (focusPool.length <= 5) {
+                focus = focusPool.slice();
             } else {
-                // Percentile outlier rejection
                 let cx0 = 0, cy0 = 0, cm0 = 0;
-                for (const b of allAlive) { cx0 += b.x * b.mass; cy0 += b.y * b.mass; cm0 += b.mass; }
+                for (const b of focusPool) { cx0 += b.x * b.mass; cy0 += b.y * b.mass; cm0 += b.mass; }
                 cx0 /= cm0; cy0 /= cm0;
-                const withDist = allAlive.map(b => ({ b, d: Math.sqrt((b.x - cx0) ** 2 + (b.y - cy0) ** 2) }));
+                const withDist = focusPool.map(b => ({ b, d: Math.sqrt((b.x - cx0) ** 2 + (b.y - cy0) ** 2) }));
                 withDist.sort((a, b) => a.d - b.d);
-                const keepCount = Math.max(2, Math.ceil(allAlive.length * 0.7));
+                const keepCount = Math.max(2, Math.ceil(focusPool.length * 0.7));
                 focus = withDist.slice(0, keepCount).map(x => x.b);
                 for (let pass = 0; pass < 2; pass++) {
                     let tx = 0, ty = 0, tm = 0;
@@ -272,11 +354,9 @@
             }
             committedFocus = focus.slice();
         } else {
-            // --- LOCK: membership changes ONLY via hysteresis boundary ---
-            // Remove bodies that left far beyond view; keep those still within committed zone
+            // LOCK — hysteresis boundary, STARS ONLY
             const viewR = Math.min(C.width, C.height) / (camZoom * 2);
-            const removeR = viewR * 1.5; // body removed only if >1.5x view radius away
-            const addR = viewR * 0.9; // new body added only if within 0.9x view
+            const removeR = viewR * 1.5, addR = viewR * 0.9;
             const removeSq = removeR * removeR, addSq = addR * addR;
 
             committedFocus = committedFocus.filter(b => {
@@ -284,9 +364,9 @@
                 return dx * dx + dy * dy < removeSq;
             });
 
-            // Check if any new body truly entered the view
+            // Add new STARS that entered view (planets never drive target)
             const committedSet = new Set(committedFocus);
-            for (const b of allAlive) {
+            for (const b of focusPool) {
                 if (committedSet.has(b)) continue;
                 const dx = b.x - camWorldX, dy = b.y - camWorldY;
                 if (dx * dx + dy * dy < addSq) {
@@ -294,10 +374,9 @@
                 }
             }
 
-            // Fallback: if everyone left committed, pick nearest body to current camera
             if (committedFocus.length === 0) {
                 let bestD = Infinity, best = null;
-                for (const b of allAlive) {
+                for (const b of focusPool) {
                     const dx = b.x - camWorldX, dy = b.y - camWorldY;
                     const d = dx * dx + dy * dy;
                     if (d < bestD) { bestD = d; best = b; }
@@ -333,38 +412,60 @@
             if (d > maxDist) maxDist = d;
         }
 
-        // Min view radius grows with focus — small binaries still shown with "dance space"
-        // For 2 bodies: view must be large enough to see their orbital motion comfortably
+        // Extend view to include planets ONLY if VERY close to focus (tight orbit planets)
+        // Many distant planets were inflating the view unnecessarily
+        for (const p of allPlanets) {
+            const dpx = p.x - targetX, dpy = p.y - targetY;
+            const d = Math.sqrt(dpx * dpx + dpy * dpy);
+            // Only include if within current focus radius (tight orbit)
+            if (d < maxDist * 1.2) {
+                const pd = d + p.r * 2;
+                if (pd > maxDist) maxDist = pd;
+            }
+        }
+
+        // Min view radius
         const screenMin = Math.min(C.width, C.height);
-        const orbitRoom = focus.length <= 2 ? screenMin * 0.28 : screenMin * 0.18;
+        const orbitRoom = screenMin * 0.14;
         maxDist = Math.max(maxDist, orbitRoom);
 
-        // Smooth maxDist — very gentle for silky zoom
+        // Asymmetric smoothing: fast grow, very slow shrink
+        // This locks view on orbital MAXIMUM, no oscillation with orbital motion
         if (smoothMaxDist === 0) smoothMaxDist = maxDist;
-        smoothMaxDist += (maxDist - smoothMaxDist) * 0.02;
+        if (maxDist > smoothMaxDist) {
+            smoothMaxDist += (maxDist - smoothMaxDist) * 0.05;  // expand responsively
+        } else {
+            smoothMaxDist += (maxDist - smoothMaxDist) * 0.0015; // decay very slowly — no wobble
+        }
 
         const isExpanding = camZoom * (2 * smoothMaxDist * 1.4) > screenMin;
-        const paddingFactor = isExpanding ? 1.6 : 1.4;
+        // Padding: 1.25 when settling (tight frame — binary ~35% of screen), 1.6 when spreading
+        const paddingFactor = isExpanding ? 1.6 : 1.25;
         const minZoom = 0.05;
-        // Lower max zoom cap: 5 → 1.5 so we never mega-zoom into a tiny region
-        const rawTargetZoom = Math.max(minZoom, Math.min(screenMin / (2 * smoothMaxDist * paddingFactor), 1.5));
+        let rawTargetZoom = Math.max(minZoom, Math.min(screenMin / (2 * smoothMaxDist * paddingFactor), 5.0));
 
         // --- Dynamism blend based on alive body count ---
         const dyn = Math.max(0, Math.min(1, (6 - allAlive.length) / 4));
 
-        // Init on first frame
+        // Init on first frame — capture initial zoom as the widest allowed
         if (!smoothInited) {
             smoothTargetX = targetX; smoothTargetY = targetY;
             smoothTargetZoom = rawTargetZoom;
             camWorldX = targetX; camWorldY = targetY;
+            cameraZoomFloor = rawTargetZoom;
             smoothInited = true;
         }
 
-        // Layer 1: smooth target — very gentle to avoid camera chasing noise
+        // Ratchet: target zoom can only be tighter (>= floor) than initial view, never wider
+        if (cameraZoomFloor !== null && rawTargetZoom < cameraZoomFloor) {
+            rawTargetZoom = cameraZoomFloor;
+        }
+
+        // Layer 1: smooth target — gentle. Slightly faster zoom response when few bodies
         const smF = 0.03;
         smoothTargetX += (targetX - smoothTargetX) * smF;
         smoothTargetY += (targetY - smoothTargetY) * smF;
-        const zSmF = 0.03;
+        const zSmF = 0.03 + dyn * 0.04; // 0.03 many → 0.07 few
         smoothTargetZoom = Math.exp(Math.log(smoothTargetZoom) + (Math.log(rawTargetZoom) - Math.log(smoothTargetZoom)) * zSmF);
 
         // Layer 2: camera slowly follows smoothed target
@@ -384,7 +485,8 @@
         const logCam = Math.log(camZoom);
         const zoomErr = logTargetZoom - logCam;
         const zoomingOut = smoothTargetZoom < camZoom;
-        const zoomGain = zoomingOut ? 0.008 : 0.004;
+        // Zoom-in gets faster when few bodies (late evolution): 0.004 → 0.016 at dyn=1
+        const zoomGain = zoomingOut ? 0.008 : 0.004 + dyn * 0.012;
         camZoom = Math.exp(logCam + zoomErr * zoomGain);
 
         camCX = C.width / 2;
@@ -496,33 +598,118 @@
     let cfg = { nStars: 3, nPlanets: 1 };
 
     function init() {
-        const nS = Math.max(1, Math.min(30, cfg.nStars | 0));
-        const nP = Math.max(0, Math.min(50, cfg.nPlanets | 0));
+        const nS = Math.max(1, Math.min(500, cfg.nStars | 0));
+        const nP = Math.max(0, Math.min(2000, cfg.nPlanets | 0));
         const cx = C.width / 2, cy = C.height / 2;
         // Spread scales slightly with star count but stays compact
         // Spread scales proportionally with star count: more stars need more space
         // 1 star: compact. 2-3 stars: baseline. 10+ stars: wider. 30 stars: very wide.
         const spreadFactor = nS === 1 ? 0.1 : 0.4 + Math.sqrt(nS) * 0.18;
-        const sp = Math.min(C.width, C.height) * spreadFactor;
+        // Mobile boost: narrower screens have less space, scale up spread to match desktop feel
+        const screenMinDim = Math.min(C.width, C.height);
+        const mobileBoost = screenMinDim < 600 ? 1.6 : 1;
+        const sp = screenMinDim * spreadFactor * mobileBoost;
 
         bodies = [];
         const ba = Math.random() * 6.283;
 
         // Place stars
         if (nS === 1) {
-            const m = 1.5 + Math.random() * 1;
-            bodies.push({ x: cx, y: cy, vx: 0, vy: 0, ax: 0, ay: 0, mass: m, r: BR * Math.cbrt(m), star: true, alive: true, trail: [] });
+            const m = 0.5 + Math.pow(Math.random(), 1.5) * 9.5;
+            bodies.push({ x: cx, y: cy, vx: 0, vy: 0, ax: 0, ay: 0, mass: m, r: BR * Math.cbrt(m) * STAR_MULT, star: true, alive: true, trail: [] });
         } else {
-            // Distance range widens with star count:
-            // min stays close (0.25) so some stars near center, max grows with nS
             const dMin = 0.25;
-            const dMax = 1.2 + Math.sqrt(nS) * 0.55; // 3 stars: 2.15, 10: 2.94, 30: 4.21
+            // When many planets, widen star spread up to 3× so planetary systems don't overlap
+            const planetBonus = 1 + 2 * Math.min(1, nP / 1500);
+            const dMax = (0.6 + Math.sqrt(nS) * 0.275) * planetBonus;
+
+            // --- Random placement topology ---
+            // 0: ring (current) — equal angles, random radii
+            // 1: uniform disk — fully random position in disk
+            // 2: clusters — 2-3 groups
+            // 3: spiral — two spiral arms
+            // 4: shell — concentric rings
+            const placement = Math.floor(Math.random() * 5);
+            const positions = [];
+
+            if (placement === 0) {
+                // Ring-ish: equal angles, varied radii
+                for (let i = 0; i < nS; i++) {
+                    const a = ba + (6.283 / nS) * i + (Math.random() - .5) * 0.6;
+                    const d = sp * (dMin + Math.random() * (dMax - dMin));
+                    positions.push([cx + Math.cos(a) * d, cy + Math.sin(a) * d]);
+                }
+            } else if (placement === 1) {
+                // Uniform disk: random angle + sqrt-radius (uniform area density)
+                for (let i = 0; i < nS; i++) {
+                    const a = Math.random() * 6.283;
+                    const d = sp * (dMin + Math.sqrt(Math.random()) * (dMax - dMin));
+                    positions.push([cx + Math.cos(a) * d, cy + Math.sin(a) * d]);
+                }
+            } else if (placement === 2) {
+                // Clusters: 2-3 groups
+                const nClusters = 2 + Math.floor(Math.random() * 2);
+                const clusterCenters = [];
+                for (let c = 0; c < nClusters; c++) {
+                    const ca = ba + (6.283 / nClusters) * c;
+                    const cd = sp * (dMax * 0.5);
+                    clusterCenters.push([cx + Math.cos(ca) * cd, cy + Math.sin(ca) * cd]);
+                }
+                for (let i = 0; i < nS; i++) {
+                    const cen = clusterCenters[i % nClusters];
+                    const a = Math.random() * 6.283;
+                    const d = sp * Math.random() * dMax * 0.35;
+                    positions.push([cen[0] + Math.cos(a) * d, cen[1] + Math.sin(a) * d]);
+                }
+            } else if (placement === 3) {
+                // Spiral: 2 arms
+                for (let i = 0; i < nS; i++) {
+                    const arm = i % 2;
+                    const t = i / nS;
+                    const a = ba + arm * Math.PI + t * 6.283 * 1.5 + (Math.random() - .5) * 0.3;
+                    const d = sp * (dMin + t * (dMax - dMin)) + (Math.random() - .5) * sp * 0.1;
+                    positions.push([cx + Math.cos(a) * d, cy + Math.sin(a) * d]);
+                }
+            } else {
+                // Shells: concentric rings
+                const shells = 2 + Math.floor(Math.random() * 3);
+                for (let i = 0; i < nS; i++) {
+                    const shell = i % shells;
+                    const shellR = dMin + (shell + 0.5) / shells * (dMax - dMin);
+                    const a = Math.random() * 6.283;
+                    const d = sp * (shellR + (Math.random() - .5) * 0.2);
+                    positions.push([cx + Math.cos(a) * d, cy + Math.sin(a) * d]);
+                }
+            }
+
+            // --- Random velocity topology ---
+            // 0: tangential (orbital rotation)
+            // 1: fully random direction
+            // 2: radial (inward/outward rush)
+            const velMode = Math.floor(Math.random() * 3);
+
             for (let i = 0; i < nS; i++) {
-                const a = ba + (6.283 / nS) * i + (Math.random() - .5) * 0.6;
-                const d = sp * (dMin + Math.random() * (dMax - dMin));
-                const ta = a + 1.5708 + (Math.random() - .5) * 0.5;
-                const m = 0.6 + Math.random() * 2.2;
-                bodies.push({ x: cx + Math.cos(a) * d, y: cy + Math.sin(a) * d, vx: Math.cos(ta), vy: Math.sin(ta), ax: 0, ay: 0, mass: m, r: BR * Math.cbrt(m), star: true, alive: true, trail: [] });
+                const [px, py] = positions[i];
+                const ax = px - cx, ay = py - cy;
+                const rr = Math.sqrt(ax * ax + ay * ay) || 1;
+                let vx, vy;
+                if (velMode === 0) {
+                    const dir = Math.random() < 0.5 ? 1 : -1; // random rotation direction
+                    vx = -ay / rr * dir + (Math.random() - .5) * 0.3;
+                    vy = ax / rr * dir + (Math.random() - .5) * 0.3;
+                } else if (velMode === 1) {
+                    const ang = Math.random() * 6.283;
+                    vx = Math.cos(ang); vy = Math.sin(ang);
+                } else {
+                    const dir = Math.random() < 0.5 ? 1 : -1;
+                    vx = ax / rr * dir + (Math.random() - .5) * 0.4;
+                    vy = ay / rr * dir + (Math.random() - .5) * 0.4;
+                }
+                const m = 0.5 + Math.pow(Math.random(), 1.5) * 9.5;
+                bodies.push({
+                    x: px, y: py, vx, vy, ax: 0, ay: 0, mass: m,
+                    r: BR * Math.cbrt(m) * STAR_MULT, star: true, alive: true, trail: []
+                });
             }
 
             // Zero COM velocity
@@ -538,7 +725,7 @@
             }
             let KE = 0;
             for (const b of bodies) KE += .5 * b.mass * (b.vx * b.vx + b.vy * b.vy);
-            const ratio = 0.3 + Math.random() * 0.35;
+            const ratio = 0.2 + Math.random() * 0.5; // wider range: 0.2–0.7
             const s = Math.sqrt(ratio * Math.abs(U) / KE);
             for (const b of bodies) { b.vx *= s; b.vy *= s; }
         }
@@ -548,15 +735,21 @@
         for (let i = 0; i < nP; i++) {
             const host = stars[Math.floor(Math.random() * stars.length)];
             // Varied orbital distance: 2-25 host radii
-            const oR = host.r * (2 + Math.random() * 23);
+            // Orbital spread widens with total planet count (less clustering when many)
+            const orbitRange = 23 + Math.sqrt(nP) * 1.8;
+            const oR = host.r * (2 + Math.random() * orbitRange);
             const pa = Math.random() * 6.283;
             const ov = Math.sqrt(G * host.mass / oR);
-            const pm = host.mass * .001;
+            // Planet mass: Mercury-like to ~2×Jupiter, log-uniform distribution
+            const pmMin = 0.00002;   // ~Mercury relative to host
+            const pmMax = 0.002;     // ~2×Jupiter relative to host
+            const pmFactor = pmMin * Math.pow(pmMax / pmMin, Math.random());
+            const pm = host.mass * pmFactor;
             bodies.push({
                 x: host.x + Math.cos(pa) * oR, y: host.y + Math.sin(pa) * oR,
                 vx: host.vx + Math.cos(pa + 1.5708) * ov,
                 vy: host.vy + Math.sin(pa + 1.5708) * ov,
-                ax: 0, ay: 0, mass: pm, r: BR * Math.cbrt(pm) * 2.2,
+                ax: 0, ay: 0, mass: pm, r: Math.max(2.5, BR * Math.cbrt(pm) * 3.0),
                 star: false, alive: true, trail: [],
                 palette: Math.floor(Math.random() * PLANET_PALETTES.length)
             });
@@ -572,6 +765,12 @@
         // Reset camera
         autoCamera = true; camWorldX = cx; camWorldY = cy;
         camFocusIds = null; committedFocus = null; smoothInited = false; smoothMaxDist = 0;
+        cameraZoomFloor = null;
+        flashes = []; activeContacts = new Set();
+
+        // Clear sprite cache — prevents memory buildup from accumulated sprites
+        // (radii vary due to merges/different masses across runs)
+        for (const key in SC) delete SC[key];
         let maxD = 0;
         for (const b of bodies) { const d = Math.sqrt((b.x - cx) ** 2 + (b.y - cy) ** 2) + b.r * 3; if (d > maxD) maxD = d; }
         camZoom = Math.min(C.width, C.height) / (2 * Math.max(maxD, 50) * 1.3);
@@ -600,29 +799,57 @@
         acc();
         for (let i = 0; i < bodies.length; i++) { const b = bodies[i]; if (!b.alive) continue; b.vx += b.ax * dt * .5; b.vy += b.ay * dt * .5; }
     }
-    function collide() {
+    // Flash + contact tracking
+    let flashes = []; // active visual flash events
+    let activeContacts = new Set(); // pair keys currently in contact zone
+
+    function collide(stepDt) {
+        const newContacts = new Set();
         for (let i = 0; i < bodies.length; i++) { const a = bodies[i]; if (!a.alive) continue;
             for (let j = i + 1; j < bodies.length; j++) { const b = bodies[j]; if (!b.alive) continue;
                 const dx = b.x - a.x, dy = b.y - a.y;
-                if (dx * dx + dy * dy < ((a.r + b.r) * .4) ** 2) {
+                const dSq = dx * dx + dy * dy;
+                const touchDist = a.r + b.r;
+                const mergeDistSq = (touchDist * 0.4) ** 2;
+
+                if (dSq < mergeDistSq) {
+                    // MERGE
+                    const bothStars = a.star && b.star;
                     const p = a.mass >= b.mass ? a : b, q = a.mass >= b.mass ? b : a, tm = p.mass + q.mass;
                     p.vx = (p.vx * p.mass + q.vx * q.mass) / tm; p.vy = (p.vy * p.mass + q.vy * q.mass) / tm;
                     p.x = (p.x * p.mass + q.x * q.mass) / tm; p.y = (p.y * p.mass + q.y * q.mass) / tm;
                     p.mass = tm;
                     p.star = p.star || q.star;
-                    // Radius formula differs for stars vs planets
-                    p.r = p.star ? BR * Math.cbrt(tm) : BR * Math.cbrt(tm) * 2.2;
+                    p.r = p.star ? BR * Math.cbrt(tm) * STAR_MULT : Math.max(2.5, BR * Math.cbrt(tm) * 3.0);
                     q.alive = false;
+                    // Flash ONLY when two stars merge
+                    if (bothStars) {
+                        flashes.push({
+                            x: p.x, y: p.y, maxR: touchDist * 7, life: 0, maxLife: 1.2,
+                            color: '255,220,120'
+                        });
+                    }
+                } else if (dSq < touchDist * touchDist && a.star && b.star) {
+                    // CONTACT zone — only star-star: tidal damping, NO flash
+                    const d = Math.sqrt(dSq);
+                    const overlap = 1 - d / touchDist;
+                    newContacts.add(i < j ? i + '_' + j : j + '_' + i);
+
+                    // TIDAL DAMPING
+                    const rate = 0.35 * overlap;
+                    const factor = 1 - rate * (stepDt || 0.016);
+                    a.vx *= factor; a.vy *= factor;
+                    b.vx *= factor; b.vy *= factor;
                 }
             }
         }
+        activeContacts = newContacts;
     }
 
     // --- Main loop ---
     function frame(ts) {
         requestAnimationFrame(frame);
         if (!lastT) lastT = ts;
-        if (ts - lastFrame < FRAME_MS) { lastT = ts; return; }
         lastFrame = ts;
 
         let dt = (ts - lastT) / 1000 * tScale; lastT = ts;
@@ -630,7 +857,7 @@
         const maxStepDt = 0.02; // max physics step size
         const totalSteps = Math.max(SUBS, Math.ceil(dt / maxStepDt));
         const sd = dt / totalSteps;
-        for (let i = 0; i < totalSteps; i++) { step(sd); collide(); }
+        for (let i = 0; i < totalSteps; i++) { step(sd); collide(sd); }
 
         // Auto-camera (manual mode leaves camWorldX/Y frozen at last auto position)
         if (autoCamera) updateAutoCamera(dt);
@@ -645,14 +872,54 @@
         // Clear
         X.clearRect(0, 0, C.width, C.height);
 
-        // Trails
-        const z = sScale(), tsz = Math.max(1, 2 * z | 0);
+        // Trails — BATCHED by color (outer loop = age, inner = bodies)
+        // This minimizes fillStyle changes from ~5000/frame to ~50-450/frame
+        const z = sScale(), tsz = Math.max(1, 2 * z | 0), halfTsz = tsz / 2;
+
+        // Group alive bodies by type/palette
+        const aliveStars = [];
+        const planetsByPalette = []; // sparse array, index = palette idx
         for (let i = 0; i < bodies.length; i++) {
             const b = bodies[i]; if (!b.alive) continue;
-            const col = b.star ? sCol : pTrailCols[b.palette || 0], tr = b.trail;
-            for (let j = 0; j < tr.length && (j >> 1) < TLEN; j += 2) {
-                X.fillStyle = col[j >> 1];
-                X.fillRect(sx(tr[j]) - tsz / 2, sy(tr[j + 1]) - tsz / 2, tsz, tsz);
+            if (b.star) aliveStars.push(b);
+            else {
+                const p = b.palette | 0;
+                if (!planetsByPalette[p]) planetsByPalette[p] = [];
+                planetsByPalette[p].push(b);
+            }
+        }
+
+        // Cache last fillStyle to skip redundant sets
+        let lastFS = null;
+
+        // Star trails: outer loop by age, inner by star (all share sCol)
+        if (aliveStars.length) {
+            for (let j = 0; j < TLEN; j++) {
+                const color = sCol[j];
+                if (color !== lastFS) { X.fillStyle = color; lastFS = color; }
+                const jx = j * 2, jy = jx + 1;
+                for (let k = 0; k < aliveStars.length; k++) {
+                    const tr = aliveStars[k].trail;
+                    if (jy >= tr.length) continue;
+                    X.fillRect(sx(tr[jx]) - halfTsz, sy(tr[jy]) - halfTsz, tsz, tsz);
+                }
+            }
+        }
+
+        // Planet trails: by palette, then by age (same cache trick)
+        for (let p = 0; p < planetsByPalette.length; p++) {
+            const planets = planetsByPalette[p];
+            if (!planets) continue;
+            const col = pTrailCols[p];
+            for (let j = 0; j < TLEN; j++) {
+                const color = col[j];
+                if (color !== lastFS) { X.fillStyle = color; lastFS = color; }
+                const jx = j * 2, jy = jx + 1;
+                for (let k = 0; k < planets.length; k++) {
+                    const tr = planets[k].trail;
+                    if (jy >= tr.length) continue;
+                    X.fillRect(sx(tr[jx]) - halfTsz, sy(tr[jy]) - halfTsz, tsz, tsz);
+                }
             }
         }
 
@@ -665,11 +932,56 @@
             X.drawImage(sp, bx - ds / 2, by - ds / 2, ds, ds);
         }
 
-        // OSD — large centered text
+        // Flashes — multi-layered shockwaves for star contacts/merges
+        for (let i = flashes.length - 1; i >= 0; i--) {
+            const f = flashes[i];
+            f.life += dt;
+            if (f.life >= f.maxLife) { flashes.splice(i, 1); continue; }
+            const t = f.life / f.maxLife;
+            const cx = sx(f.x), cy = sy(f.y);
+
+            // 1. Initial bright white flash — peaks at start, fades by t=0.4
+            const flashA = Math.max(0, Math.pow(1 - t * 2.5, 2));
+            if (flashA > 0) {
+                const flashR = f.maxR * 0.5 * z;
+                const g = X.createRadialGradient(cx, cy, 0, cx, cy, flashR);
+                g.addColorStop(0, `rgba(255,255,255,${flashA})`);
+                g.addColorStop(0.3, `rgba(${f.color},${flashA * 0.95})`);
+                g.addColorStop(0.7, `rgba(${f.color},${flashA * 0.4})`);
+                g.addColorStop(1, `rgba(${f.color},0)`);
+                X.fillStyle = g;
+                X.beginPath();
+                X.arc(cx, cy, flashR, 0, 6.283);
+                X.fill();
+            }
+
+            // 2. Primary shockwave ring — expands fast, thick
+            const ringR = f.maxR * t * z;
+            const ringA = Math.min(1, Math.pow(1 - t, 1.1) * 2);
+            X.strokeStyle = `rgba(${f.color},${ringA})`;
+            X.lineWidth = Math.max(3, 14 * (1 - t) * z);
+            X.beginPath();
+            X.arc(cx, cy, ringR, 0, 6.283);
+            X.stroke();
+
+            // 3. Trailing inner ring — depth/detail
+            if (t > 0.15) {
+                const r2 = f.maxR * (t - 0.15) * z;
+                const a2 = Math.pow(1 - t, 1.4) * 0.85;
+                X.strokeStyle = `rgba(255,245,210,${a2})`;
+                X.lineWidth = Math.max(2, 6 * (1 - t) * z);
+                X.beginPath();
+                X.arc(cx, cy, r2, 0, 6.283);
+                X.stroke();
+            }
+        }
+
+        // OSD — large centered text, scales with viewport
         if (osd > 0) {
             osd--;
             X.fillStyle = `rgba(255,200,100,${Math.min(1, osd / 15)})`;
-            X.font = 'bold 48px Segoe UI, Arial, sans-serif';
+            const osdSize = Math.max(48, Math.min(120, C.width * 0.05));
+            X.font = `bold ${osdSize}px Segoe UI, Arial, sans-serif`;
             X.textAlign = 'center';
             X.textBaseline = 'middle';
             X.fillText(osdText, C.width / 2, C.height / 2);
@@ -684,8 +996,25 @@
     const menuEl = document.getElementById('menu');
     const sStars = document.getElementById('sStars'), vStars = document.getElementById('vStars');
     const sPlanets = document.getElementById('sPlanets'), vPlanets = document.getElementById('vPlanets');
-    sStars.addEventListener('input', () => vStars.textContent = sStars.value);
-    sPlanets.addEventListener('input', () => vPlanets.textContent = sPlanets.value);
+    // Two-way sync between slider and number input
+    function syncPair(slider, number) {
+        slider.addEventListener('input', () => number.value = slider.value);
+        number.addEventListener('input', () => {
+            let v = parseInt(number.value);
+            if (isNaN(v)) return;
+            v = Math.max(+slider.min, Math.min(+slider.max, v));
+            slider.value = v;
+        });
+        // Clamp + validate on blur
+        number.addEventListener('blur', () => {
+            let v = parseInt(number.value) || +slider.min;
+            v = Math.max(+slider.min, Math.min(+slider.max, v));
+            number.value = v;
+            slider.value = v;
+        });
+    }
+    syncPair(sStars, vStars);
+    syncPair(sPlanets, vPlanets);
 
     let started = false;
     window.startSim = () => {
@@ -703,6 +1032,7 @@
         if (cmd === 'pause') doPause();
         if (cmd === 'restart') doRestart();
         if (cmd === 'menu') { menuEl.classList.remove('hidden'); tScale = 0; }
+        if (cmd === 'fullscreen') toggleFullscreen();
         showBtns();
     };
 
