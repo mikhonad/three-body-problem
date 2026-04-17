@@ -32,7 +32,7 @@ Interactive visualization of the classical three-body problem with Newtonian gra
 Verify authenticity before running the offline copy:
 
 ```
-certutil -hashfile "The Three-Body Problem.html" SHA256
+certutil -hashfile index.html SHA256
 ```
 
 Expected SHA-256:
