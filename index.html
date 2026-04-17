@@ -254,7 +254,9 @@
         SC[k] = o; return o;
     }
 
-    function resize() { C.width = innerWidth; C.height = innerHeight; }
+    // Supersample: render at 2× resolution, browser scales down → crisp "high-DPR" look
+    const SUP = 2;
+    function resize() { C.width = innerWidth * SUP; C.height = innerHeight * SUP; }
     addEventListener('resize', resize); resize();
 
     // --- Controls ---
@@ -508,7 +510,7 @@
         e.preventDefault();
         switchToManual();
         const f = e.deltaY < 0 ? 1.15 : 1 / 1.15;
-        const mx = e.clientX, my = e.clientY;
+        const mx = e.clientX * SUP, my = e.clientY * SUP;
         manualPanX = mx - C.width / 2 - (mx - C.width / 2 - manualPanX) * f;
         manualPanY = my - C.height / 2 - (my - C.height / 2 - manualPanY) * f;
         manualZoom = Math.max(manualZoom * f, 0.001);
@@ -526,8 +528,8 @@
 
     if (!isTouch) {
         // Desktop: mouse drag + dblclick
-        C.addEventListener('mousedown', e => { dr = true; dsx = e.clientX; dsy = e.clientY; psx = manualPanX; psy = manualPanY; switchToManual(); });
-        addEventListener('mousemove', e => { if (!dr) return; manualPanX = psx + e.clientX - dsx; manualPanY = psy + e.clientY - dsy; });
+        C.addEventListener('mousedown', e => { dr = true; dsx = e.clientX * SUP; dsy = e.clientY * SUP; psx = manualPanX; psy = manualPanY; switchToManual(); });
+        addEventListener('mousemove', e => { if (!dr) return; manualPanX = psx + e.clientX * SUP - dsx; manualPanY = psy + e.clientY * SUP - dsy; });
         addEventListener('mouseup', () => dr = false);
         C.addEventListener('dblclick', resetToAuto);
     } else {
@@ -544,13 +546,13 @@
                 lastTap = now;
                 switchToManual();
                 dragging1 = true;
-                tdsx = t[0].clientX; tdsy = t[0].clientY;
+                tdsx = t[0].clientX * SUP; tdsy = t[0].clientY * SUP;
                 tpsx = manualPanX; tpsy = manualPanY;
             }
             if (t.length === 2) {
                 dragging1 = false;
                 switchToManual();
-                pinchDist = Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+                pinchDist = Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) * SUP;
                 pinchZoom0 = manualZoom;
             }
         }, { passive: false });
@@ -559,11 +561,11 @@
             e.preventDefault();
             const t = e.touches;
             if (t.length === 1 && dragging1) {
-                manualPanX = tpsx + t[0].clientX - tdsx;
-                manualPanY = tpsy + t[0].clientY - tdsy;
+                manualPanX = tpsx + t[0].clientX * SUP - tdsx;
+                manualPanY = tpsy + t[0].clientY * SUP - tdsy;
             }
             if (t.length === 2 && pinchDist > 0) {
-                const d = Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+                const d = Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) * SUP;
                 manualZoom = Math.max(pinchZoom0 * (d / pinchDist), 0.001);
             }
         }, { passive: false });
@@ -574,7 +576,7 @@
                 // After pinch ends, restart single-drag from current pos
                 pinchDist = 0;
                 dragging1 = true;
-                tdsx = e.touches[0].clientX; tdsy = e.touches[0].clientY;
+                tdsx = e.touches[0].clientX * SUP; tdsy = e.touches[0].clientY * SUP;
                 tpsx = manualPanX; tpsy = manualPanY;
             }
         });
