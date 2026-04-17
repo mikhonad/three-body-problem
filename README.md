@@ -6,7 +6,7 @@ Interactive visualization of the classical three-body problem with Newtonian gra
 
 ## Features
 
-- Configurable setup: **1–30 stars** and **0–50 planets**
+- Configurable setup: **1–500 stars** and **0–2000 planets**
 - Realistic gravitational interactions with volume-conserving mergers
 - Cinematic auto-camera that follows the action
 - Manual zoom & pan (scroll wheel / pinch / drag)
