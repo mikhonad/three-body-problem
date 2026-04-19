@@ -830,14 +830,27 @@
                     p.vx = (p.vx * p.mass + q.vx * q.mass) / tm; p.vy = (p.vy * p.mass + q.vy * q.mass) / tm;
                     p.x = (p.x * p.mass + q.x * q.mass) / tm; p.y = (p.y * p.mass + q.y * q.mass) / tm;
                     p.mass = tm;
-                    p.star = p.star || q.star;
+
+                    // STELLAR IGNITION: accumulated planet mass crosses stellar threshold
+                    // 0.5 = smallest star mass in our sim (brown-dwarf-like boundary)
+                    const IGNITION_MASS = 0.5;
+                    const justIgnited = !p.star && !q.star && tm >= IGNITION_MASS;
+
+                    p.star = p.star || q.star || justIgnited;
                     p.r = p.star ? BR * Math.cbrt(tm) * STAR_MULT : Math.max(2.5, BR * Math.cbrt(tm) * 3.0);
                     q.alive = false;
-                    // Flash ONLY when two stars merge
+
+                    // Flash on star-star merge OR stellar ignition (dramatic birth)
                     if (bothStars) {
                         flashes.push({
                             x: p.x, y: p.y, maxR: touchDist * 7, life: 0, maxLife: 1.2,
                             color: '255,220,120'
+                        });
+                    } else if (justIgnited) {
+                        // Even more dramatic flash for a newborn star
+                        flashes.push({
+                            x: p.x, y: p.y, maxR: p.r * 12, life: 0, maxLife: 1.8,
+                            color: '255,245,190'
                         });
                     }
                 } else if (dSq < touchDist * touchDist && a.star && b.star) {
