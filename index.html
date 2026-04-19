@@ -14,7 +14,7 @@
         canvas { display: block; width: 100%; height: 100%; touch-action: none; -webkit-user-select: none; user-select: none; }
         #btns {
             position: fixed; bottom: 56px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 48px; z-index: 10;
+            display: flex; z-index: 10;
             opacity: 1; transition: opacity 0.6s ease;
         }
         #btns.hidden { opacity: 0; pointer-events: none; }
@@ -24,32 +24,33 @@
             font-size: 64px; cursor: pointer; touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
             display: flex; align-items: center; justify-content: center;
+            margin: 0 24px;  /* fallback for flex gap (Safari <14.1) */
         }
         #btns button:active { background: rgba(255,200,100,.4); }
         @media (max-width: 1600px) {
-            #btns { gap: 26px; bottom: 36px; }
-            #btns button { width: 94px; height: 94px; font-size: 38px; }
+            #btns { bottom: 36px; }
+            #btns button { width: 94px; height: 94px; font-size: 38px; margin: 0 13px; }
         }
         @media (max-width: 1024px) {
-            #btns { gap: 16px; bottom: 26px; }
-            #btns button { width: 64px; height: 64px; font-size: 28px; }
+            #btns { bottom: 26px; }
+            #btns button { width: 64px; height: 64px; font-size: 28px; margin: 0 8px; }
         }
         @media (max-width: 768px) {
-            #btns { gap: 10px; bottom: 22px; }
-            #btns button { width: 58px; height: 58px; font-size: 24px; }
+            #btns { bottom: 22px; }
+            #btns button { width: 58px; height: 58px; font-size: 24px; margin: 0 5px; }
         }
         @media (max-width: 480px) {
-            #btns { gap: 6px; bottom: 18px; }
-            #btns button { width: 50px; height: 50px; font-size: 20px; }
+            #btns { bottom: 18px; }
+            #btns button { width: 50px; height: 50px; font-size: 20px; margin: 0 3px; }
         }
         @media (max-width: 380px) {
-            #btns { gap: 4px; bottom: 14px; }
-            #btns button { width: 44px; height: 44px; font-size: 18px; }
+            #btns { bottom: 14px; }
+            #btns button { width: 44px; height: 44px; font-size: 18px; margin: 0 2px; }
         }
 
         /* Menu overlay */
         #menu {
-            position: fixed; inset: 0; z-index: 100;
+            position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100;
             background: radial-gradient(ellipse at center, #1a0a00 0%, #000 70%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: rgba(255,220,150,.9); padding: 20px;
@@ -62,9 +63,11 @@
             text-shadow: 0 0 30px rgba(255,150,50,.6);
         }
         #menu .row {
-            display: flex; align-items: center; gap: 24px;
+            display: flex; align-items: center;
             margin: 20px 0; font-size: clamp(18px, 1.8vw, 32px);
         }
+        /* margin-based spacing (works on all browsers incl. old Safari) */
+        #menu .row > * + * { margin-left: 24px; }
         #menu label { min-width: 140px; text-align: right; color: rgba(255,200,100,.8); }
         #menu input[type=number] {
             width: 100px; padding: 12px; font-size: inherit;
@@ -105,8 +108,9 @@
                 letter-spacing: 2px; margin-bottom: 32px;
             }
             #menu .row {
-                gap: 12px; margin: 12px 0; font-size: 14px;
+                margin: 12px 0; font-size: 14px;
             }
+            #menu .row > * + * { margin-left: 12px; }
             #menu label { min-width: 60px; }
             #menu input[type=number] { width: 60px; padding: 7px; }
             #menu input[type=range] {
@@ -131,9 +135,10 @@
                 text-shadow: 0 0 30px rgba(255,150,50,.6);
             }
             #menu .row {
-                gap: 28px; margin: 18px 0;
+                margin: 18px 0;
                 font-size: clamp(18px, 1.6vw, 28px);
             }
+            #menu .row > * + * { margin-left: 28px; }
             #menu label { min-width: 150px; }
             #menu input[type=number] {
                 width: 110px; padding: 12px;
@@ -811,7 +816,12 @@
                 const dx = b.x - a.x, dy = b.y - a.y;
                 const dSq = dx * dx + dy * dy;
                 const touchDist = a.r + b.r;
-                const mergeDistSq = (touchDist * 0.4) ** 2;
+                // Merge threshold differs by pair type:
+                // - Stars have big glow coronas, need deep core overlap (0.4)
+                // - Planets are solid — merge when surfaces truly meet (0.85)
+                // - Mixed (star + planet): intermediate (0.6)
+                const mergeFactor = (a.star && b.star) ? 0.4 : (!a.star && !b.star) ? 0.85 : 0.6;
+                const mergeDistSq = (touchDist * mergeFactor) ** 2;
 
                 if (dSq < mergeDistSq) {
                     // MERGE
@@ -831,16 +841,28 @@
                         });
                     }
                 } else if (dSq < touchDist * touchDist && a.star && b.star) {
-                    // CONTACT zone — only star-star: tidal damping, NO flash
+                    // CONTACT zone — star-star: tidal damping, NO flash
                     const d = Math.sqrt(dSq);
                     const overlap = 1 - d / touchDist;
                     newContacts.add(i < j ? i + '_' + j : j + '_' + i);
-
-                    // TIDAL DAMPING
                     const rate = 0.35 * overlap;
                     const factor = 1 - rate * (stepDt || 0.016);
                     a.vx *= factor; a.vy *= factor;
                     b.vx *= factor; b.vy *= factor;
+                } else if (a.star !== b.star) {
+                    // PLANET passing through STAR's corona — mild atmospheric drag
+                    const star = a.star ? a : b;
+                    const planet = a.star ? b : a;
+                    // Only dense part of corona (close to surface), not the full glow halo
+                    const coronaR = star.r * 1.8 + planet.r;
+                    if (dSq < coronaR * coronaR) {
+                        const d = Math.sqrt(dSq);
+                        const overlap = 1 - d / coronaR;
+                        // Cubic falloff — strong only when very close to surface
+                        const rate = 0.25 * overlap * overlap * overlap;
+                        const factor = 1 - rate * (stepDt || 0.016);
+                        planet.vx *= factor; planet.vy *= factor;
+                    }
                 }
             }
         }
