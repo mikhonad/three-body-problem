@@ -37,7 +37,7 @@ certutil -hashfile index.html SHA256
 
 Expected SHA-256:
 ```
-1ea8f13033acac4c5fdb44fc53a310722c3730a7d7f8ee7ae06493ee67cdc451
+2b2ca30e35a8db5c979275ccdc25b6c2dbb429b1680aaba1e46c79f76d38856d
 ```
 
 If the hash doesn't match, the file has been modified — use the version from this repository instead.
