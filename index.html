@@ -191,6 +191,11 @@
 (() => {
     const C = document.getElementById('c'), X = C.getContext('2d');
     const G = 2000000, SSQ = 900, BR = 14, STAR_MULT = 2, SUBS = 4, TLEN = 50;
+
+    // Stellar mass-radius relation: main-sequence R ~ M^0.7 (more realistic than ∛m)
+    // Low-mass dwarfs stay compact, high-mass giants grow impressively
+    // Hard cap at 400px so glow sprite stays within browser's canvas size limits (~16384px)
+    function starRadius(m) { return Math.min(400, BR * Math.pow(m, 0.7) * STAR_MULT); }
     const FPS = 30, FRAME_MS = 1000 / FPS;
 
     let bodies, lastT = 0, tScale = 2, restartT = null, lastFrame = 0;
@@ -226,20 +231,40 @@
         // Cache key includes palette for planets
         const k = (s ? 's' : 'p' + (paletteIdx | 0) + '_') + (r * 10 | 0);
         if (SC[k]) return SC[k];
-        const gm = s ? 3 : 1.3, gr = r * gm;
+        // Cap cache — if too many unique sprites, nuke and rebuild (prevents memory bloat)
+        if (Object.keys(SC).length > 250) {
+            for (const key in SC) delete SC[key];
+        }
+        const gm = s ? 4.5 : 1.3, gr = r * gm;  // stars: bigger glow halo
         const sz = ((gr * 2 + 4) * SPR_SCALE) | 0;
         const o = document.createElement('canvas'); o.width = o.height = sz;
         const g = o.getContext('2d'), cx = sz / 2;
         const R = r * SPR_SCALE, GR = gr * SPR_SCALE;
         if (s) {
+            // Outer corona — long, bright, warm
             const l = g.createRadialGradient(cx, cx, R * .3, cx, cx, GR);
-            l.addColorStop(0, 'rgba(255,220,80,.9)'); l.addColorStop(.15, 'rgba(255,180,40,.6)');
-            l.addColorStop(.4, 'rgba(255,120,20,.2)'); l.addColorStop(.7, 'rgba(255,80,10,.05)');
+            l.addColorStop(0, 'rgba(255,230,120,1)');       // bright near core
+            l.addColorStop(.1, 'rgba(255,210,90,.85)');
+            l.addColorStop(.25, 'rgba(255,170,50,.55)');
+            l.addColorStop(.5, 'rgba(255,120,30,.25)');
+            l.addColorStop(.75, 'rgba(255,80,15,.08)');
             l.addColorStop(1, 'rgba(255,50,0,0)');
             g.fillStyle = l; g.beginPath(); g.arc(cx, cx, GR, 0, 6.283); g.fill();
+
+            // Second glow pass for extra brightness (additive layer)
+            const l2 = g.createRadialGradient(cx, cx, 0, cx, cx, R * 2.2);
+            l2.addColorStop(0, 'rgba(255,255,220,.7)');
+            l2.addColorStop(.4, 'rgba(255,220,100,.35)');
+            l2.addColorStop(1, 'rgba(255,180,40,0)');
+            g.fillStyle = l2; g.beginPath(); g.arc(cx, cx, R * 2.2, 0, 6.283); g.fill();
+
+            // Hot core — bright white-yellow surface
             const c = g.createRadialGradient(cx, cx, 0, cx, cx, R);
-            c.addColorStop(0, '#fffff0'); c.addColorStop(.3, '#fff096');
-            c.addColorStop(.7, 'rgba(255,200,60,.95)'); c.addColorStop(1, 'rgba(255,160,20,.8)');
+            c.addColorStop(0, '#ffffff');              // pure white center
+            c.addColorStop(.25, '#fffbe0');            // near-white yellow
+            c.addColorStop(.55, '#fff082');            // light yellow
+            c.addColorStop(.85, 'rgba(255,200,50,1)'); // saturated gold
+            c.addColorStop(1, 'rgba(255,150,10,.95)'); // warm orange edge
             g.fillStyle = c; g.beginPath(); g.arc(cx, cx, R, 0, 6.283); g.fill();
         } else {
             const pal = PLANET_PALETTES[paletteIdx % PLANET_PALETTES.length];
@@ -622,7 +647,7 @@
         // Place stars
         if (nS === 1) {
             const m = 0.5 + Math.pow(Math.random(), 1.5) * 9.5;
-            bodies.push({ x: cx, y: cy, vx: 0, vy: 0, ax: 0, ay: 0, mass: m, r: BR * Math.cbrt(m) * STAR_MULT, star: true, alive: true, trail: [] });
+            bodies.push({ x: cx, y: cy, vx: 0, vy: 0, ax: 0, ay: 0, mass: m, r: starRadius(m), star: true, alive: true, trail: [] });
         } else {
             const dMin = 0.25;
             // When many planets, widen star spread up to 3× so planetary systems don't overlap
@@ -714,7 +739,7 @@
                 const m = 0.5 + Math.pow(Math.random(), 1.5) * 9.5;
                 bodies.push({
                     x: px, y: py, vx, vy, ax: 0, ay: 0, mass: m,
-                    r: BR * Math.cbrt(m) * STAR_MULT, star: true, alive: true, trail: []
+                    r: starRadius(m), star: true, alive: true, trail: []
                 });
             }
 
@@ -837,20 +862,36 @@
                     const justIgnited = !p.star && !q.star && tm >= IGNITION_MASS;
 
                     p.star = p.star || q.star || justIgnited;
-                    p.r = p.star ? BR * Math.cbrt(tm) * STAR_MULT : Math.max(2.5, BR * Math.cbrt(tm) * 3.0);
+                    p.r = p.star ? starRadius(tm) : Math.max(2.5, BR * Math.cbrt(tm) * 3.0);
                     q.alive = false;
 
                     // Flash on star-star merge OR stellar ignition (dramatic birth)
                     if (bothStars) {
+                        // Star-star merger: huge flash + secondary delayed shockwave
                         flashes.push({
-                            x: p.x, y: p.y, maxR: touchDist * 7, life: 0, maxLife: 1.2,
-                            color: '255,220,120'
+                            x: p.x, y: p.y, maxR: touchDist * 14, life: 0, maxLife: 2.2,
+                            color: '255,235,150'
+                        });
+                        // Secondary shockwave — different timing/color for depth
+                        flashes.push({
+                            x: p.x, y: p.y, maxR: touchDist * 9, life: -0.15, maxLife: 1.6,
+                            color: '255,200,80'
                         });
                     } else if (justIgnited) {
-                        // Even more dramatic flash for a newborn star
+                        // Stellar ignition: dramatic birth — even bigger, whiter
                         flashes.push({
-                            x: p.x, y: p.y, maxR: p.r * 12, life: 0, maxLife: 1.8,
-                            color: '255,245,190'
+                            x: p.x, y: p.y, maxR: p.r * 22, life: 0, maxLife: 3.0,
+                            color: '255,250,210'
+                        });
+                        // Secondary shockwave
+                        flashes.push({
+                            x: p.x, y: p.y, maxR: p.r * 14, life: -0.2, maxLife: 2.2,
+                            color: '255,225,150'
+                        });
+                        // Tertiary soft afterglow
+                        flashes.push({
+                            x: p.x, y: p.y, maxR: p.r * 9, life: -0.4, maxLife: 1.5,
+                            color: '255,200,100'
                         });
                     }
                 } else if (dSq < touchDist * touchDist && a.star && b.star) {
@@ -968,18 +1009,24 @@
             X.drawImage(sp, bx - ds / 2, by - ds / 2, ds, ds);
         }
 
-        // Flashes — multi-layered shockwaves for star contacts/merges
+        // Flashes — multi-layered shockwaves (optimized: cap radii to viewport, skip offscreen)
+        const maxVisualR = Math.max(C.width, C.height) * 0.9;
         for (let i = flashes.length - 1; i >= 0; i--) {
             const f = flashes[i];
             f.life += dt;
             if (f.life >= f.maxLife) { flashes.splice(i, 1); continue; }
+            if (f.life < 0) continue;  // delayed flash not yet active
             const t = f.life / f.maxLife;
             const cx = sx(f.x), cy = sy(f.y);
 
-            // 1. Initial bright white flash — peaks at start, fades by t=0.4
+            // Skip rendering if flash center is way off-screen (nothing would be visible)
+            const margin = maxVisualR;
+            if (cx < -margin || cx > C.width + margin || cy < -margin || cy > C.height + margin) continue;
+
+            // 1. Bright core — capped to viewport size
             const flashA = Math.max(0, Math.pow(1 - t * 2.5, 2));
-            if (flashA > 0) {
-                const flashR = f.maxR * 0.5 * z;
+            if (flashA > 0.02) {
+                const flashR = Math.min(maxVisualR, f.maxR * 0.5 * z);
                 const g = X.createRadialGradient(cx, cy, 0, cx, cy, flashR);
                 g.addColorStop(0, `rgba(255,255,255,${flashA})`);
                 g.addColorStop(0.3, `rgba(${f.color},${flashA * 0.95})`);
@@ -991,24 +1038,28 @@
                 X.fill();
             }
 
-            // 2. Primary shockwave ring — expands fast, thick
-            const ringR = f.maxR * t * z;
+            // 2. Primary shockwave ring — capped
+            const ringR = Math.min(maxVisualR * 1.2, f.maxR * t * z);
             const ringA = Math.min(1, Math.pow(1 - t, 1.1) * 2);
-            X.strokeStyle = `rgba(${f.color},${ringA})`;
-            X.lineWidth = Math.max(3, 14 * (1 - t) * z);
-            X.beginPath();
-            X.arc(cx, cy, ringR, 0, 6.283);
-            X.stroke();
-
-            // 3. Trailing inner ring — depth/detail
-            if (t > 0.15) {
-                const r2 = f.maxR * (t - 0.15) * z;
-                const a2 = Math.pow(1 - t, 1.4) * 0.85;
-                X.strokeStyle = `rgba(255,245,210,${a2})`;
-                X.lineWidth = Math.max(2, 6 * (1 - t) * z);
+            if (ringA > 0.05) {
+                X.strokeStyle = `rgba(${f.color},${ringA})`;
+                X.lineWidth = Math.max(3, 14 * (1 - t) * z);
                 X.beginPath();
-                X.arc(cx, cy, r2, 0, 6.283);
+                X.arc(cx, cy, ringR, 0, 6.283);
                 X.stroke();
+            }
+
+            // 3. Trailing inner ring — only if big flash still makes sense
+            if (t > 0.15 && ringR < maxVisualR) {
+                const r2 = Math.min(maxVisualR, f.maxR * (t - 0.15) * z);
+                const a2 = Math.pow(1 - t, 1.4) * 0.85;
+                if (a2 > 0.05) {
+                    X.strokeStyle = `rgba(255,245,210,${a2})`;
+                    X.lineWidth = Math.max(2, 6 * (1 - t) * z);
+                    X.beginPath();
+                    X.arc(cx, cy, r2, 0, 6.283);
+                    X.stroke();
+                }
             }
         }
 
